@@ -2,11 +2,8 @@
 
 ```mermaid
 flowchart TB
-  %% =========================
-  %% TravNow Architecture
-  %% =========================
 
-  U[User] --> MLP[travnow.com Main Landing Page\n(Any technology)]
+  U[User] --> MLP[travnow.com Main Landing Page]
   MLP --> D1[travnow.com/asheville]
   MLP --> D2[travnow.com/st-augustine]
   MLP --> D3[travnow.com/myrtle-beach]
@@ -14,16 +11,17 @@ flowchart TB
   %% -------------------------
   %% Tahir Front-End + CMS
   %% -------------------------
-  subgraph Tahir_FE[Tahir Front-End + CMS Ownership]
+  subgraph Tahir_FE[Tahir Front-End and CMS]
     direction TB
-    CMS[(CMS Content)]
+    CMS[CMS Content]
+
     D1 --> CMS
     D2 --> CMS
     D3 --> CMS
 
-    D1 --> FE1[Destination Page UI\n(Content + Sections + CTA)]
-    D2 --> FE2[Destination Page UI\n(Content + Sections + CTA)]
-    D3 --> FE3[Destination Page UI\n(Content + Sections + CTA)]
+    D1 --> FE1[Destination Page UI]
+    D2 --> FE2[Destination Page UI]
+    D3 --> FE3[Destination Page UI]
   end
 
   %% -------------------------
@@ -31,30 +29,31 @@ flowchart TB
   %% -------------------------
   subgraph Travcoding_APIs[Travcoding APIs]
     direction TB
-    SU[Sign Up / Create Account]
+    SU[Sign Up]
     SI[Sign In]
     GW[Get Wallet]
   end
 
-  FE1 --> AuthDecision{Authenticated?}
-  FE2 --> AuthDecision
-  FE3 --> AuthDecision
+  FE1 --> Auth{Authenticated?}
+  FE2 --> Auth
+  FE3 --> Auth
 
-  AuthDecision -- No --> SU
-  AuthDecision -- No --> SI
+  Auth -- No --> SU
+  Auth -- No --> SI
   SU --> GW
   SI --> GW
-  AuthDecision -- Yes --> GW
+  Auth -- Yes --> GW
 
   %% -------------------------
   %% Travcoding Widget
   %% -------------------------
-  subgraph Travcoding_Widget[Travcoding Booking Widget]
+  subgraph Widget[Travcoding Booking Widget]
     direction TB
     W[Widget Container]
-    H[Hotels\n(Existing suppliers)]
-    R[Homes\n(Quintess)]
-    A[Activities\n(Hotelbeds → Viator)]
+    H[Hotels]
+    R[Homes]
+    A[Activities]
+
     W --> H
     W --> R
     W --> A
@@ -65,38 +64,35 @@ flowchart TB
   FE2 --> W
   FE3 --> W
 
-  W --> WalletUsage[Wallet-enabled booking flow]
+  %% -------------------------
+  %% Booking Outcome
+  %% -------------------------
+  W --> Outcome{Booking Completed?}
 
   %% -------------------------
-  %% Lead Capture + Funnels
+  %% Funnels
   %% -------------------------
-  subgraph Funnels[Lead Capture & Email Funnels]
+  subgraph Funnels[Email Funnels]
     direction TB
-    LC[Lead Capture Funnel]
     F1[Booked Funnel]
     F2[Not Booked Funnel]
   end
 
-  FE1 --> LC
-  FE2 --> LC
-  FE3 --> LC
-
-  WalletUsage --> BookingOutcome{Booking Completed?}
-  BookingOutcome -- Yes --> F1
-  BookingOutcome -- No --> F2
+  Outcome -- Yes --> F1
+  Outcome -- No --> F2
 
   %% -------------------------
-  %% Backoffice + CRM + Reporting
+  %% Ops and Reporting
   %% -------------------------
-  subgraph OpsStack[Ops & Reporting]
+  subgraph Ops[Ops and Reporting]
     direction TB
-    BO[(Travcoding Backoffice)]
-    GHL[(GoHighLevel CRM)]
-    RT[(Reporting Tools)]
+    BO[Travcoding Backoffice]
+    GHL[GoHighLevel CRM]
+    RT[Reporting Tools]
   end
 
-  BookingOutcome -- Yes --> BO
-  BookingOutcome -- Yes --> GHL
-  BookingOutcome -- Yes --> RT
-  BookingOutcome -- No --> GHL
+  Outcome -- Yes --> BO
+  Outcome -- Yes --> GHL
+  Outcome -- Yes --> RT
+  Outcome -- No --> GHL
 
